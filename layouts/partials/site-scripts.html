@@ -1,0 +1,29 @@
+{{ $script := .Site.Data.webpack_assets.app }}
+{{ with $script.js }}
+<script src="{{ relURL (printf " %s%s" "dist/" .) }}"></script>
+{{ end }}
+
+<script>
+    MathJax = {
+        loader: {load: ['[tex]/braket']},
+        tex: {
+            packages: {'[+]': ['braket']},
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            macros: {
+                RR: "{\\bf R}",
+                CC: "{\\bf C}",
+                QQ: "{\\bf Q}",
+                ZZ: "{\\bf Z}",
+                NN: "{\\bf N}",
+                R: "{\\rightarrow}",
+                expect: "{\\bf E}",
+                del: ["{\\frac{\\partial #1}{\\partial #2}}", 2],
+                delsq: ["{\\frac{\\partial^2 #1}{\\partial #2^2}}", 2],
+                bold: ["{\\bf #1}", 1],
+            }
+        }
+    };
+</script>
+<script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-chtml.js">
+</script>
