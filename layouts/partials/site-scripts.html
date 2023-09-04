@@ -7,7 +7,9 @@
     MathJax = {
         loader: {load: ['[tex]/braket']},
         tex: {
-            packages: {'[+]': ['braket']},
+            packages: {
+                '[+]': ['braket'],
+            },
             inlineMath: [['$', '$'], ['\\(', '\\)']],
             macros: {
                 RR: "{\\bf R}",
@@ -15,6 +17,7 @@
                 QQ: "{\\bf Q}",
                 ZZ: "{\\bf Z}",
                 NN: "{\\bf N}",
+                SS: "{\\bf S}",
                 R: "{\\rightarrow}",
                 expect: "{\\bf E}",
                 del: ["{\\frac{\\partial #1}{\\partial #2}}", 2],

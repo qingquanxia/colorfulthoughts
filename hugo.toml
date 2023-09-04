@@ -2,3 +2,5 @@ baseURL = 'http://colorfulthoughts.org/'
 languageCode = 'en-us'
 title = 'Colorful Thoughts'
 theme = 'ananke'
+
+canonifyURLs = true
