@@ -76,7 +76,7 @@ We can now explain the outrageous claim of the Nyquist-Shannon sampling theorem.
 
 From our sampled points, we can perfectly reconstruct the original signal with a magical process called sinc interpolation: essentially we multiply each sample by a time-shifted sinc function and add them all up. Intuitively this makes sense, since each sinc function is 1 at the sample and 0 for all other samples, so it acts like a sort of smooth "basis", and changing the value of one sample will not affect the interpolation at the other samples.
 
-![](sinc-interpolation.png)
+![](/assets/sinc-interpolation.png)
 
 *Figure from [Arcak's EE16B Sp17 lecture notes](https://people.eecs.berkeley.edu/~arcak/resources/16Breader.pdf)*
 

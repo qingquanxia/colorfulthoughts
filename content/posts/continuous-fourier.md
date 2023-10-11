@@ -21,9 +21,9 @@ Because it turns out pretty much every formula in physics is a differential equa
 
 ## Inner product spaces and Dirac notation
 
-The idea of inner products originates from the 3D Euclidean vectors used in classical mechanics. A vector $v$ is an arrow in 3D space; if you place the tail of the arrow at the origin, you can associate the vector with the coordinates at the head, $(v_1, v_2, v_3)$. The dot product of two vectors $u,v$ is defined as $u\\cdot v = u_1v_1+u_2v_2+u_3v_3$. It essentially measures how aligned they are. Two vectors that are perfectly aligned will give maximum dot product; perpendicular will give 0; anti-parallel will give most negative dot product. Notice in particular that $v\\cdot v = |v|^2$; in fact this property can be used to define the length of a vector. They are also used for decomposing a vector into coordinates. If I have an orthonormal basis $\\{e_1, e_2, e_3\\}$, I can project my vector $v$ onto the lines spanned by each of them, so that projecting it onto $e_1$, for example, will give the vector $(v\\cdot e_1)e_1$. Because these three basis vectors span the entire 3-dimensional space, adding the three projection vectors will perfectly reconstruct the original vector.
+The idea of inner products originates from the 3D Euclidean vectors used in classical mechanics. A vector $v$ is an arrow in 3D space; if you place the tail of the arrow at the origin, you can associate the vector with the coordinates at the head, $(v_1, v_2, v_3)$. The dot product of two vectors $u,v$ is defined as $u\\cdot v = u_1v_1+u_2v_2+u_3v_3$. It essentially measures how aligned they are. Two vectors that are perfectly aligned will give maximum dot product; perpendicular will give 0; anti-parallel will give most negative dot product. Notice in particular that $v\\cdot v = |v|^2$; in fact this property can be used to define the length of a vector. They are also used for decomposing a vector into coordinates. If I have an orthonormal basis $\\{e_1, e_2, e_3\\}$, I can project my vector $v$ onto the lines spanned by each of them, so that projecting it onto $e_1$, for example, will give the vector $(v\\cdot e_1)e_1$. (By orthonormal basis, I mean a basis in which the vectors are orthogonal to each other and each of unit length.) Because these three basis vectors span the entire 3-dimensional space, adding the three projection vectors will perfectly reconstruct the original vector.
 
-Of course, people just weren't content with sticking to three dimensions. The same concepts can be applied to arbitrary dimension, so that for $u,v\\in \\RR^n$, $u\\cdot v = \\sum_i u_iv_i$. The real fun begins when we try to extend this concept to complex vectors, that is, to $\\CC^n$. Because length is absolutely essential to geometry, we would like to preserve the idea that the product of a vector with itself is its length squared, that is, it is real. Hence we will define the product of two vector $u,v\\in \\CC^n$ as $\\sum_i u_i^* v_i$. Hence, the product of $v$ with itself is $\\sum_i v_i^* v_i = \\sum_i |v_i|^2$, which makes sense.
+Of course, people just weren't content with sticking to three dimensions. The same concepts can be applied to arbitrary dimension, so that for $u,v\\in \\RR^n$, $u\\cdot v = \\sum_i u_iv_i$. The real fun begins when we try to extend this concept to complex vectors, that is, to $\\CC^n$. Because length is absolutely essential to geometry, we would like to preserve the idea that the product of a vector with itself is its length squared, in particular, that it is real. Hence we will define the product of two vector $u,v\\in \\CC^n$ as $\\sum_i u_i^* v_i$. Hence, the product of $v$ with itself is $\\sum_i v_i^* v_i = \\sum_i |v_i|^2$, which makes sense.
 
 Here we formalize the concept of an inner product, which is a generalization of all the ideas expressed above. An inner product over a complex (or real) vector space $V$ is defined as a function mapping $V\\times V\\R \\CC$ which has these three properties:
 1. Linearity: $\\braket{u|a v + b w} = a\\braket{u|v} + b\\braket{u|w}$
@@ -42,7 +42,37 @@ Third, these definitions seem more general than our previous complex-coefficient
 
 So our new definition is still the same familiar product. However, it is independent of basis, and it does give us a new way to apply inner products to the strange world of uncountably-infinite dimensional vector spaces.
 
-## TODO: spectral theorem? Should I put it here or after fourier transforms?
+## Spectral theorem
+
+Suppose we have an inner product space $V$, and a linear operator $A:V\\R V$.
+The *adjoint* of $A$ is defined as the operator $A^\\dagger$ such that for any vectors $u,v\\in V$, $\\braket{u|A|v} = \\braket{v|A^\\dagger|u}^*$. It's simple to see that when $A$ is represented as a matrix, $A^\\dagger$ is its conjugate transpose. For example, if
+$$A =
+\\begin{pmatrix}
+1 & 2i & 3 \\\\
+2i & i & 5-4i \\\\
+-1+2i & 0 & 4-3i
+\\end{pmatrix}
+$$
+its adjoint is
+$$
+A^\\dagger =
+\\begin{pmatrix}
+1 & -2i & -1-2i \\\\
+-2i & -i & 0 \\\\
+3 & 5+4i & 4+3i
+\\end{pmatrix}
+$$
+An operator $A$ is called Hermitian if $A=A^\\dagger$. (If the vector space is real, such operators are called symmetric.)
+
+*The Finite-dimensional Spectral Theorem*:
+If $A$ is a Hermitian operator on a finite dimensional complex inner-product space with dimension $N$. Then
+1. All eigenvalues of $A$ are real.
+2. We can choose $N$ eigenvectors of $A$ which form an orthonormal basis of the vector space.
+
+Hermitian operators induce a beautiful structure on the vector space.
+
+*An Infinite-dimensional Spectral Theorem*:
+Let $A$ is a Hermitian operator on a Hilbert space $H$. It induces a linear operator on the double-dual $H^{**}$. $H^{ **}$ is equipped with a measure $m$. In the dual space, $A$ has a set of eigenvectors $\\{\\ket{e_i}\\}_ {i\\in I}$ with eigenvalues $c_i$ such that $\\int_{i\\in I} c_i\\bra{e_i} dm$ is a resolution of the identity.
 
 ## Fourier series
 
@@ -64,7 +94,7 @@ From the diagram above, we see that the y-component of force on the tiny bit of 
 (Aside: for comparison, here are some other wave equations:
 1. Sound waves: $\\nabla^2 p = \\frac{1}{v_s^2}\\frac{\\partial^2 p}{\\partial t^2}$ where $v_s=\\sqrt{B/\\rho_0}$ is the speed of sound, $B$ is the bulk modulus of the fluid, and $\\rho_0$ is the average density.
 2. EM waves (light): $\\nabla^2 \\bf{E} = \\frac{1}{c^2}\\frac{\\partial^2 \\bf{E}}{\\partial t^2}$, where $c=1/\\sqrt{\\epsilon_0\\mu_0}$ is the speed of light.
-3. Matter waves (like free electrons) in quantum theory: $\\nabla^2 \\psi = \\frac{2m}{\\hbar} (-i\\frac{\\partial \\psi}{\\partial t})$. (This looks a bit different from the others; it expresses the fact that matter waves do not have a constant phase-velocity, which leads to dispersion of different frequency components. But keep in mind the $i$ is essentially a derivative, so it has sorta the same form).
+3. de-Broglie matter waves (like free electrons) in quantum theory: $\\nabla^2 \\psi = \\frac{2m}{\\hbar} (-i\\frac{\\partial \\psi}{\\partial t})$. (This looks a bit different from the others; it expresses the fact that matter waves do not have a constant phase-velocity, which leads to dispersion of different frequency components. But keep in mind the $i$ is essentially a derivative, so it has sorta the same form).
 4. Gravitational waves: I have no idea, but in the limit of small distortions I'm guessing it has the same form as the others.
 
 These equations stand in contrast with the heat and diffusion equations, in which the time derivative is only first order. Hence heat and diffusion do not exhibit wave-like behavior.)
@@ -147,11 +177,34 @@ $$
 }
 $$
 
-These equations are remarkably symmetric. In fact, it turns out that $\\mathrm{FT}[x(t)] = -\\mathrm{IFT}[x(-t)]$.
+These equations are remarkably symmetric. In fact, it turns out that $\\mathrm{FT}[x(t)] = \\mathrm{IFT}[x(-t)]$.
 
 This has its uses. For example, one question that the Fourier transforms immediately raise is: what is the Fourier transform of $e^{2\\pi if_0t}$? If we try plugging it in, it yields a strange integral. For any $f\\neq f_0$, that part of the integral should be zero, since a complex exponential is, over the whole real line, zero on average. However, when $f=f_0$, the integral is infinity. This kinda makes sense since a pure tone should yield an infinitely sharp response in the frequency domain.
 
 But we can be more precise. What is the Fourier transform of a dirac delta? $\\mathrm{FT}[\\delta (t-t_0)] = \\int_{t=-\\infty}^\\infty e^{-2\\pi ift} \\delta(t-t_0)dt = e^{-2\\pi ift_0}$. But from duality, this means $\\mathrm{FT}[e^{2\\pi if_0t}] = \\delta(f-f_0)$!
+
+#### Properties:
+Shamelessly copied from textbooks:
+
+1. $\\mathrm{FT}[ax_1(t) + bx_2(t)] = a\\mathrm{FT}[x_1(t)] + b\\mathrm{FT}[x_2(t)]$ (linearity)
+2. $\\mathrm{FT}[x(at)] = \\frac{1}{|a|} X(\\frac{f}{a})$
+3. $\\mathrm{FT}[x(t)] = \\mathrm{IFT}[x(-t)]$ and $\\mathrm{IFT}[X(f)] = \\mathrm{FT}[X(-f)]$ (duality)
+4. $\\mathrm{FT}[x(t) * y(t)] = X(f)Y(f)$ (convolution)
+
+Common transforms:
+
+1. $\\mathrm{FT}[e^{2\\pi f_0 t}] = \\delta(f - f_0)$
+2. $\\mathrm{FT}[\\mathrm{sinc}(t)] = w_{-1/2,1/2}(f)$
+where
+$\\mathrm{sinc}(t) = \\frac{\\sin(\\pi t)}{\\pi t}$
+and the window function
+$$ w_{a,b}(t) = \\begin{cases}
+1 & a\\leq t\\leq b \\cr
+0 & \\text{otherwise}
+\\end{cases}
+$$
+3. $\\mathrm{FT}[u(t)] = \\frac{1}{2\\pi if} + \\frac{1}{2}\\delta(f)$ (see Hilbert transform)
+
 
 #### A different perspective: quantum mechanics and momentum space
 I first learned about the Fourier transform in quantum mechanics, but it was presented in such a way that I did not even know it was a transform. Its description was so natural and intuitive that it just made sense. What follows is a quick debrief on quantum mechanics, but the math can be applied to surprisingly many other physical systems.
@@ -160,7 +213,7 @@ There are five postulates in quantum mechanics:
 
 1 A physical system's state is a vector in a complex Hilbert space. (A Hilbert space is just an inner-product space whose norm makes it a complete metric space. All the familiar finite dimensional spaces are Hilbert spaces. $L^2(\\RR, \\CC)$ is also a Hilbert space).
 
-2a A physical observable (e.g. energy, momentum, position, spin) is represented by a Hermitian linear operator on the space. (An operator $A$ is called Hermitian if $A=A^\\dagger$; that is, if its adjoint, aka its conjugate-transpose, is equal to itself.) When you make a measurement of the observable using any sort of apparatus, it is only possible to observe an eigenvalue of the Hermitian operator.
+2a A physical observable (e.g. energy, momentum, position, spin) is represented by a Hermitian linear operator on the space. When you make a measurement of the observable using any sort of apparatus, it is only possible to observe an eigenvalue of the Hermitian operator.
 
 2b [not relevant to us] Measurement probability postulate.
 
@@ -180,3 +233,22 @@ $$
 $$
 
 But this is just our FT/IFT! At its heart, the Fourier transform is nothing more than a change in basis.
+
+## Systems and convolution
+
+A *system* is nothing more than a box which takes in an input $x(t)$ and spits out an output $y(t)$. A *linear system* is a system that preserves linearity, that is, if it maps $x_1(t) \\mapsto y_1(t)$ and $x_2(t)\\mapsto y_2(t)$, then it maps $ax_1(t)+bx_2(t)\\mapsto ay_1(t)+by_2(t)$. Its inputs live in some sort of vector space, say $L^2(\\RR, \CC)$. In that case, a linear system is a linear transformation from input space to output space, $L^2(\\RR, \CC) \\R L^2(\\RR, \CC)$. Linear transformations are completely described by their action on the basis, so we can capture all the information about the linear system in a function $h(t,t')$ where $\\delta(t-t') \\mapsto h(t,t')$.
+
+A *linear time-invariant (LTI) system* is one which also satisfied time-invariance, that is, if $x(t) \\mapsto y(t)$, then $x(t-t_0) \\mapsto y(t-t_0)$. The neat thing about these kinds of systems is that since our dirac-delta basis was really just the set of all time-shifted versions of the dirac-delta, we can capture the entire behavior of the system by seeing where it maps $\\delta(t)$. The response to the input $\\delta(t)$ is usually denoted $h(t)$. For any input $x(t)$, we can find its response:
+$$\\begin{align}
+Ax(t) &= A\\int_{t'} x(t)\\delta(t-t')dt' \\\\
+&= \\int_{t'} x(t) A\\delta(t-t')dt' \\\\
+&= \\int_{t'} x(t) h(t-t')dt' \\\\
+&:= x(t) * h(t)
+\\end{align}$$
+
+#### Example: electric fields and water molecules
+For concreteness, let's use the example of an electromagnetic wave (microwave) hitting a glass of water. Water is a polar molecule: the oxygen atom is more electronegative than the hydrogen atoms, and pulls more of the negative charge to one end. This means each water molecule has a dipole moment. At room temperature, the molecules jiggle around randomly, their dipole moments executing an exotic dance. When an electric field is applied though, the dipole moments tend to align with the electric field. By applying an electric field $\\mathbf{E}$, we have induced a polarization $\\mathbf{P}$. In the case of a constant electric field, this relation is typically linear, so that $\\mathbf{P} = \\chi_E \\mathbf{E}$. $\\chi_E$ is the electric susceptibility of water.
+
+It seems that we are done. Our solution is rather boring. For an input $\\mathbf{E}$, our response \\mathbf{P}$ is just multiplying it by a constant. But this is not the whole picture. Imagine applying an electric pulse of infinitely short width, $\\mathbf{E_0} \\delta(t)$. When the pulse hits water, the poor molecules don't have time to instantaneously swivel in the direction of the field. After all, they still have to obey the laws of Newtonian mechanics: bodies at rest tend to stay at rest. They experience an instantaneous impulse, and afterwards, nothing. The response becomes $\\mathbf{P_0} h(t)$.
+
+Now we transform into the frequency domain, $H(f)$. This produces a spectrum.

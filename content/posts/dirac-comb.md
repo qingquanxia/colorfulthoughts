@@ -11,11 +11,27 @@ This article is part of a series:
 
 The Dirac comb is defined as $d_c(t) = \\sum_{n=-\\infty}^{\\infty} \\delta(t-n)$. It is an infinite train of impulses, each spaced exactly one unit apart. To make it spaced $\\Delta t$ apart, we simply use $d_c(t/\\Delta t)$. Notice how this not only adjusts the spacing, but also adjusts the intensity of the impulses, so that on average, integrating over a unit interval will always give you 1. This is a nice property which is analogous to firing paintball pellets at a cart. You can fire slowly with heavy powerful pellets, or you can fire rapidly with small wimpy pellets, but the rate at which momentum is imparted to the cart is the same. In fact, in the limit $\\Delta t\\rightarrow 0$, we have $d_c(t/\\Delta t)\\rightarrow 1$, analogous to hosing the cart down with a continuous stream of water instead of shooting it with discrete pellets.
 
-The Fourier transform of $d_c(t)$ turns out to be itself, that is, $d_c(f)$. [TODO: should I add proof here?]
+The Fourier transform of $d_c(t)$ turns out to be itself, that is, $d_c(f)$.
+
+Proof:
+Consider first the Fourier series representation of $\\delta(t)$ in the interval $[-1/2,1/2]$. All its Fourier coefficients are equal to 1, hence, in that interval, $\\delta(t) = \\sum_n e^{2\\pi int}$. Because all these exponentials are at least periodic with period 1, we see that $d_c(t) = \\sum_n \\delta(t-n) = \\sum_n e^{2\\pi int}$. Hence, its Fourier trnasform is $FT[d_c(t)] = \\int_t e^{-2\\pi ift} \\sum_n \\delta(t-n) dt = \\sum_n e^{-2\\pi ifn} = d_c(f)$.
 
 The neatest part is that it can be used to model sampling. If we have a continuous signal $x(t)$, and we sample it with spacing $\\Delta t$, what we're really doing is multiplying it by $d_c(t/\\Delta t)$
 
 If we have a signal $x(t)$ contained within a width $T$ and we take the convolution $x(t)*d_c(t/T)$, we are copy-pasting $x(t)$ at every spike in the train, and essentially making a periodic version of the signal with period $T$.
+
+## Deriving the DFT
+
+Suppose we have a sequence $x_n$ which is periodic with period $N$, and spaced $\\Delta t$ apart, hence in the frequency domain it's spaced $\\Delta f = \\frac{1}{N\\Delta t}$ apart. The time domain representation of this sequence is $x(t) = \\sum_n x_n \\delta(\\frac{t}{\\Delta t} - n) = \\sum_n x_n \\Delta t \\delta(t-n\\Delta t)$.
+
+Using linearity, its Fourier transform is
+$$\\begin{align}
+X(f) &= \\sum_n x_n\\Delta t e^{-2\\pi in\\Delta t f} \\\\
+&= \\sum_m \\left( \\sum_{n=0}^{N-1} x_n\\Delta t e^{-2\\pi in\\Delta t f} \\right) e^{-2\\pi imN\\Delta t f} \\\\
+&= \\left( \\sum_{n=0}^{N-1} x_n \\frac{1}{N\\Delta f} e^{-2\\pi i \\frac{n}{N}\\frac{f}{\\Delta f}} \\right) \\left( \\sum_m e^{-2\\pi im\\frac{f}{\\Delta f}} \\right) \\\\
+&= \\left( \\sum_{n=0}^{N-1} x_n \\frac{1}{N} e^{-2\\pi i \\frac{n}{N}\\frac{f}{\\Delta f}} \\right) \\frac{1}{\\Delta f} d_c(\\frac{f}{\\Delta f}) \\\\
+&= \\sum_k X_k \\delta(f-k\\Delta f)
+\\end{align}$$
 
 ## Applications
 
@@ -32,20 +48,28 @@ Suppose we have a digital signal $x(t) = \\sum_{n=-\\infty}^\\infty x[n]\\delta(
 
 #### Shifting fractional frequency in discrete frequency domain.
 
-Suppose we have a regularly spaced grid of frequency samples, spaced $\\Delta f$ apart, that we have stored in a computer. Shifting by an integer number of spaces is easy. But what if we want to shift by a fraction of a sample, say, $f_s$? The operations we must do is as follows:
+Suppose we have a regularly spaced grid of frequency samples, $X_k$, spaced $\\Delta f$ apart, that we have stored in a computer. Shifting by an integer number of spaces is easy. But what if we want to shift by a fraction of a sample, say, $f_s$? The operations we must do is as follows:
 1. Convert to time-domain. This results in a signal with period $1/\\Delta f$.
 2. Multiply by complex exponential $e^{2\\pi i f_s t}$
-3. Multiply by the window function $w_{0,1/\\Delta f}(t)$
-4. Make it periodic again by convoluting by $d_c(\\Delta f t)$
+3. Multiply by the window function $w_{-\\frac{1}{2\\Delta f},\\frac{1}{2\\Delta f}}(t)$
+4. Make it periodic again by convolving by $\\sum_n \\delta(t - \\frac{n}{\\Delta f}) = \\Delta f d_c(\\Delta f t)$
 5. Convert back to frequency domain
 
 If we were to do all this in the frequency domain, it would look like:
 1. Convolve by $\\delta(f-f_s)$
-2. Convolve by $\\mathrm{sinc}(...)$
-3. Sample again in the same grid.
+2. Convolve by $\\frac{1}{\\Delta f}\\mathrm{sinc}(\\frac{f}{\\Delta f})$
+3. Multiply by $d_c(\\frac{f}{\\Delta f})$.
 
-The formula we eventually get is something like this:
-$X'(\\Delta f n) = \\sum_m \\mathrm{sinc}(...) X'(\\Delta f m)$
+Because convolution is associative, we can combine steps 1 and 2 so that it's a single step, that is, convolve by $\\frac{1}{\\Delta f}\\mathrm{sinc}(\\frac{f-f_s}{\\Delta f})$. Step 3 essentially samples on the same grid, and then to get the final coefficients, we need to multiply by $\\Delta f$.
+
+If our original sequence $X_k$ was aperiodic, the shifted frequencies we eventually get is
+$$
+\\begin{align}
+Y_k &= \\left( \\sum_l X_l\\delta(f-l\\Delta f) \\right) * \\mathrm{sinc}(\\frac{f-f_s}{\\Delta f}) \\\\
+&= \\sum_l X_l \\mathrm{sinc}(\\frac{f-f_s-(l\\Delta f)}{\\Delta f})\\\\
+&= \\sum_l X_l \\mathrm{sinc}(k-l-\\frac{f_s}{\\Delta f})
+\\end{align}
+$$
 
 
 
