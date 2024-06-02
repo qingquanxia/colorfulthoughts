@@ -9,11 +9,13 @@ This article is part of a series:
 2. [Part 2, Discrete time]({{< relref "discrete-time.md" >}})
 3. [Part 3, Unifying the continuous and discrete worlds: the dirac comb]({{< relref "dirac-comb.md" >}})
 
-The purpose of this post is mainly to provide intuition about how signals are discretized. Don't worry about the details of the math. The next article will provide a powerful tool which will immensely simplify the plethora of formulas in this article.
+The purpose of this post is mainly to provide intuition about how signals are discretized. Please don't lose sleep over how messy the math here is. The next article will provide a powerful tool which will immensely simplify many of the formulas in this article.
 
-The fact is that even though the things we care about are analog, computers live in a digital world. Any signal processing done inside a computer must both be discrete in the time domain, and also represent values with limited precision. To explain the math though, let's assume for the moment that we can represent real numbers with infinite precision, and that we are merely forced to discretize the time domain.
+The modern truth is that even though the things we care about are analog, computers live in a digital world. Any signal processing done inside a computer must both be discrete in the time domain, and also represent values with limited precision. 
 
-With the Fourier series as our predecessor, we now work out the discrete fourier transform.
+To explain the math though, let's assume for the remainder of the article that we can represent real numbers with infinite precision, and that we are only forced to discretize the time domain.
+
+With the Fourier series as our predecessor, we now work out the discrete fourier transform (DFT).
 
 ## The DFT
 
@@ -23,12 +25,15 @@ $\\braket{e^{2\\pi i k_1 n} | e^{2\\pi i k_2 n}} = \\sum_{n=0}^{N-1} e^{2\\pi i 
 
 Hence, $\\{e^{2\\pi i (k/N)n}\\}_{k\\in \\ZZ}$ is an orthogonal set of functions. However, any two functions where $k$ differs by a multiple of $N$ are actually the same function on our discrete set of points. This is because $e^{2\\pi i (0/N)n} = e^{2\\pi i (N/N)n} = 1$ for all integers $n$. This effect is known as aliasing.
 
-{{< details "Aside" >}}
+{{< details "Aliasing (click to expand)" >}}
 Aliasing is the same reason why in movies a racecar's wheel will be seen slowly turning backwards even as the car is blazing at over 120mph down a freeway. A typical video sampling rate is 60 frames per second. This means that if the tire made 60 revolutions per second = 3600rpm, then on each frame of the video the wheel will be in exactly the same position. So 61 revolutions per second would alias down to 1 revolution per second, that is, the tire slowly crawling forward, whereas 59 revolutions per second would alias down to -1 revolution per second, that is, the tire slowly crawling backward.
 
 ![aliasing](/assets/aliasing.png)
 
 *Figure from [Arcak's EE16B Sp17 lecture notes](https://people.eecs.berkeley.edu/~arcak/resources/16Breader.pdf)*
+
+---
+
 {{< /details >}}
 
 Because of aliasing, our actual orthonormal basis is $\\{\\frac{1}{\\sqrt{N}} e^{2\\pi i (k/N)n}\\}_{k \\in \\{0, \\cdots, N-1\\}}$. It makes sense that we have $N$ basis functions, since our original vector space was of dimension $N$.
@@ -44,7 +49,7 @@ $$
 }
 $$
 
-Note that instead of having a $1/\\sqrt{N}$ in both transforms to make them symmetric, we've placed the entire $N$ term in the inverse transform. This makes the transform non-orthonormal. The reasons for this, however, will become clear in the next article.
+Note that instead of having a $1/\\sqrt{N}$ in both transforms to make them symmetric, we've placed the entire $N$ term in the inverse transform. This makes the transform non-unitary. The reasons for this, however, will become clear in the next article.
 
 So far we've been using integer values for $n$. If we place our domain of $N$ points in the time-domain though, and change variables so $t = \Delta t n$ for some scale factor $\\Delta t$, then our orthonormal functions become $\\{\\frac{1}{\\sqrt{N}} e^{2\\pi i (\\frac{k}{N\Delta t})t}\\}_{k \\in \\{0, \\cdots, N-1\\}}$, so that in the frequency domain our points are spaced $\\frac{1}{N\Delta t}$ apart.
 
@@ -54,7 +59,7 @@ So far, our DFT can handle functions which periodic with period $N$. What if we 
 
 How do we model this? Perhaps we could imitate what we did in the continuous case. Take our DFT scenario, and imagine the limit as $N\\R \\infty$. But if we only extend the right side of our domain to infinity, we're stuck with a left end which is fixed at 0. Should we perhaps consider $\\{-N, \\cdots N\\}$ to be our domain instead? At this point I got bogged down in the details of the math and never completed it.
 
-Fortunately, we don't have to do this, because we had already derived the answer in the previous article!
+Fortunately, we don't have to do this, because we had already derived the answer in the previous article! Take a look at the following figure, which summarizes all the things that we have derived so far. There is a pattern which allows us to immediately write down the equation.
 
 ![aliasing](/assets/fourier-domains.svg)
 
